@@ -1,22 +1,18 @@
-#!name=Locket VIP - Stability Fix 2026-11-17
-#!desc=Ban sua thu nghiem: bo fake HTTP 200 cho Photobooth/AI; de request tao anh di toi server goc. Giu cac script RevenueCat va Firebase cua repo Xwuan19 (chua kiem toan an toan / chua xac minh quyen Gold).
-#!category=Locket - Experimental
+#!name=Locket Filter - Clean Diagnostics
+#!desc=Safe pass-through diagnostic for Locket filter errors. Disables interception and unverified third-party scripts. Does NOT unlock Gold, AI filters, or Photobooth.
+#!category=Locket - Diagnostics
+#!author=ipags17vn
+#!version=2026-11-18
 
-# Khong REJECT UDP/QUIC toan cuc va khong chan Firebase Realtime Config.
-# Khong xoa ETag lan nua o [Header Rewrite]; hai request-script ben duoi xu ly viec nay.
-
-[Script]
-# GIU NGUYEN cac script RevenueCat/Firebase tu repo goc de kiem thu tinh tuong thich.
-# LUU Y: day la script ben thu ba, co the thay doi va khong bao dam Gold thuc te.
-revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^/]+$), script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_revenuecat_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
-revenuecat_req = type=http-request, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_revenuecat_request.js?v=20261108_26, timeout=60
-firebase_req = type=http-request, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_request.js?v=20261108_26, timeout=60
-firebase_resp = type=http-response, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
-
-# QUAN TRONG:
-# Khong gan locket_pb_req.js vao http-request (no tra ve URL anh goc gia lam ket qua).
-# Khong gan locket_filter_response.js vao api.locketcamera.com (no doi loi 400/402/403 thanh 200).
-# Vi the cac yeu cau AI Filter/Photobooth se di thang toi server, va bao loi thuc neu tai khoan khong du quyen.
-
-[MITM]
-hostname = %APPEND% api.revenuecat.com, firebaseremoteconfig.googleapis.com
+# This is NOT a Gold unlock module.
+# It contains NO HTTP request/response scripts, header rewrites, hostname MITM,
+# DNS overrides, or QUIC blocking rules.
+#
+# IMPORTANT: Existing modules, manually installed CA certificates, VPN profiles,
+# DNS profiles, and cached application state are NOT disabled by this file.
+# Disable all other Locket-related modules and network profiles separately.
+#
+# If free filters still fail with Shadowrocket completely off and on cellular,
+# the issue is outside this module. Check app/account/server status.
+#
+# No [Script] and no [MITM] entries intentionally.
